@@ -1,0 +1,54 @@
+application: saveup-beta
+version: test
+runtime: python27
+api_version: 1
+threadsafe: yes
+
+handlers:
+- url: /favicon\.ico
+  static_files: favicon.ico
+  upload: favicon\.ico
+
+- url: /css
+  static_dir: css
+
+- url: /js
+  static_dir: js
+
+- url: /images
+  static_dir: images
+
+- url: /dividendCronJob
+  script: main.app
+  login: admin
+
+- url: /priceTargetsCronJob
+  script: main.app
+  login: admin
+
+- url: /reviewScoresCronJob
+  script: main.app
+  login: admin
+
+- url: /analyseStocksCronJob
+  script: main.app
+  login: admin
+
+- url: /latestPriceCronJob
+  script: main.app
+  login: admin
+
+- url: /historicalPriceCronJob
+  script: main.app
+  login: admin
+
+- url: .*
+  script: main.app
+  secure: always
+
+
+libraries:
+- name: webapp2
+  version: latest
+- name: jinja2
+  version: latest

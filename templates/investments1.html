@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> 
+	<title>Investment</title>
+    <link rel="stylesheet" href="/css/default.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<div id="header">
+	<h1>
+		<a href="#home" id="backButton"><</a>
+		<span>$</span>av<img src="thumb.png">nUp
+	</h1>
+</div>
+
+
+<ul id="navbar">
+	<a class="active" href="#home"><img src="http://www.iconsdb.com/icons/preview/white/home-5-xxl.png"></a>
+	<a href="#chatbot"><img src="http://www.iconsdb.com/icons/preview/white/speech-bubble-2-xxl.png"></a>
+</ul>
+
+
+<div id="investments" class="summary">
+	<table id="investmentSummary">
+
+		<tr id="lengthyHeader">
+			<th class="investmentName">Name</th>
+			<th class="investmentQuantity">Quantity</th>
+			<th class="investmentPrice">Current Price</th>
+			<th class="investmentTotal">Total</th>
+		</tr>
+
+		<tr id="shorterHeader">
+			<th class="investmentName">Name</th>
+			<th class="investmentQuantity">Qty</th>
+			<th class="investmentPrice">Price</th>
+			<th class="investmentTotal">Total</th>
+		</tr>
+		
+		<!--Stuff will be inserted here-->
+		
+	</table>
+	<br></br><br></br><h2>You have earned ${{investmentEarnings}} from your investments!</h2>
+</div>
+
+<div id="investmentsList">
+	<h2>Your investment holdings:</h2>
+	<ol id="holdingsList"><!--Stuff will be inserted here--></ol>
+</div>
+
+<a class="additionalCrapAtTheBottom" href="#ChatBot">
+	<h2> + Find something to invest in! </h2>
+</a>
+
+</body>
+
+
+<script src="canvasjs.min.js"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<script>
+	
+//add investments to table
+var investments = {{investmentsArray}}, i, investmentsList="", holdingsList="";
+for (i = 0; i < investments.length; i++){
+	investmentsList += "<tr><td>"+investments[i][0]+"</td><td>"+investments[i][1]+"</td><td>"+investments[i][2]+ "</td><td>"+investments[i][3]+"</td></tr>";
+	
+	holdingsList += "<li><button class='accordion'><span id='stockName'>" +investments[i][4]+ " (" +investments[i][0]+")</span><span id='stockPrice'>"+investments[i][2]+"</span></button><div class='panel'></div></li>";
+}
+document.getElementById("investmentSummary").innerHTML += investmentsList;
+document.getElementById("holdingsList").innerHTML = holdingsList;
+
+//accordions
+var accordions = document.getElementsByClassName("accordion");
+var i, j, accContent, stockSymbol;
+for (i = 0; i < accordions.length; i++) {
+	accordions[i].onclick = function(){
+		this.classList.toggle("active");
+		this.nextElementSibling.classList.toggle("show");
+		
+		accContent = this.innerHTML;
+		stockSymbol = accContent.substring(accContent.indexOf('(') + 1, accContent.indexOf(')'));
+		
+		//create accordion content
+		this.nextElementSibling.innerHTML = "<div id='"+stockSymbol+"Chart' class='accordionGraph'></div>";
+		this.nextElementSibling.innerHTML += loadTable(stockSymbol);	
+		loadGraph(stockSymbol);
+	}
+}
+	
+stockTableData = {{stockTableData}};
+
+function loadTable(stockSymbol){
+	for (var i in stockTableData){
+		if (i === stockSymbol){
+			var tableHTML = "<table id='stockTable'><tr><td>Last price: </td><td>"+stockTableData[i][0]+"</td><td>Buy : </td><td>"+stockTableData[i][5]+"</td></tr><tr><td>Open: </td><td>"+stockTableData[i][1]+"</td><td>Sell : </td><td>"+stockTableData[i][6]+"</td></tr><tr><td>High: </td><td>"+stockTableData[i][2]+"</td><td>BVol : </td><td>"+stockTableData[i][7]+"</td>	</tr><tr><td>Low: </td><td>"+stockTableData[i][3]+"</td><td>SVol : </td><td>"+stockTableData[i][8]+"</td></tr><tr><td>Volume: </td><td>"+stockTableData[i][4]+"</td></tr></table>"
+			
+			+"<table id='shortStockTable'><tr><td>Last price: </td><td>Buy : </td></tr><tr><td>"+stockTableData[i][0]+"</td><td>"+stockTableData[i][5]+"</td></tr><tr><td>Open: </td><td>Sell : </td></tr><tr><td>"+stockTableData[i][1]+"</td><td>"+stockTableData[i][6]+"</td></tr><tr><td>High: </td><td>BVol : </td></tr><tr><td>"+stockTableData[i][2]+"</td><td>"+stockTableData[i][7]+"</td></tr><tr><td>Low: </td><td>SVol : </td></tr><tr><td>"+stockTableData[i][3]+"</td><td>"+stockTableData[i][8]+"</td></tr><tr><td>Volume: </td></tr><tr><td>"+stockTableData[i][4]+"</td></tr></table>";
+			return (tableHTML);
+			break;	
+		}
+	}
+}
+	
+
+stockGraphData = {{stockGraphData}}
+	
+function loadGraph(stockSymbol){	
+	var stockData;
+	for (var i in stockGraphData){
+		if (i === stockSymbol){
+			stockData = stockGraphData[i];
+		}
+	}
+	
+	var spendingLineChart = new CanvasJS.Chart(stockSymbol+"Chart", {
+		animationEnabled: true,
+		axisX: {
+			gridColor: "Silver",
+			tickColor: "silver",
+			valueFormatString: "DD/MMM"
+		},
+		toolTip: {
+			shared: true
+		},
+		theme: "theme2",
+		axisY: {
+			gridColor: "Silver",
+			tickColor: "silver"
+		},
+		legend: {
+			verticalAlign: "center",
+			horizontalAlign: "right"
+		},
+		data: [
+		{
+			type: "line",
+			showInLegend: true,
+			lineThickness: 2,
+			name: "Price",
+			markerType: "square",
+			color: "#F08080",
+			dataPoints: stockData,
+		},
+		],
+		legend: {
+			cursor: "pointer",
+			itemclick: function (e) {
+				if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+					e.dataSeries.visible = false;
+				}
+				else {
+					e.dataSeries.visible = true;
+				}
+				spendingLineChart.render();
+			}
+		}
+	});
+	spendingLineChart.render();
+}
+</script>

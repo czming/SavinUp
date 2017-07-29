@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+{% autoescape true %}
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> 
+	<title>ChatBot</title>
+    <link rel="stylesheet" href="/css/default.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+
+<div id = "chatbotHeader">
+	<div id="header">
+		<h1><span>$</span>av<img src="/images/thumb.png">nUp</h1>
+	</div>
+
+
+	<ul id="navbar">
+		<a class="active" href="/"><img src="http://www.iconsdb.com/icons/preview/white/home-5-xxl.png"></a>
+		<a href="/chatbot"><img src="http://www.iconsdb.com/icons/preview/white/speech-bubble-2-xxl.png"></a>
+	</ul>
+</div>
+
+<div id="msgArea">
+{% for msg in chat_history %}
+	{% if msg.from_user %}
+		{% if msg.isImage %}
+			<div class="userMsg"> <img src="/image?image={{msg.content}}"></div>
+		{% else %}
+			<div class="userMsg">{{msg.content}}</div>
+		{% endif %}
+	{% else %}
+		<div class="botMsg">{{msg.content|safe}}</div>
+	{% endif %}
+{% endfor %}
+</div>
+
+<form action="/submitchat" method="post" enctype="multipart/form-data" id="chatForm">
+
+	<div id="preset-buttons" class="preset-container">
+	
+		<div id="all-preset" class="preset-set">
+			<div class="preset" id="savings-sub"><img src="/images/presetSavings.png" class="press"/><span class="caption">Savings</span></div>
+			
+			<div class="preset" id="expenditure-sub"><img src="/images/presetExpenditure.png" class="press"/><span class="caption">Expenditure</span></div>
+			
+			<div class="preset" id="investment-sub"><img src="/images/presetInvestment.png" class="press"/><span class="caption">Investment</span></div>
+			
+			<div class="preset"><label for="upload-photo"><img src="/images/presetPhoto.png" class="press"/></label></div>
+			
+			<div class="preset"><input type="file" name="newImage" capture="camera" id="upload-photo" style="display:none;"></div>
+		</div>
+		
+		<div id="savings-preset" class="preset-set">
+			<div class="preset" id="get-savings" onclick="insertText('chatUserInput', 'My Savings');"><img src="/images/presetGetHoldings.png" class="press"/><span class="caption">Get Savings</span></div>
+			<div class="preset" id="add-savings" onclick="insertText('chatUserInput', 'Save $);"><img src="/images/presetAddinv.png" class="press"/><span class="caption">Add Savings</span></div>
+			<div class="preset" id="back-savings"><img src="/images/presetBack.png" class="press"/><span class="caption">Back</span></div>
+		</div>
+		
+		<div id="expenditure-preset" class="preset-set">
+			<div class="preset" onclick="insertText('chatUserInput', ';Food: $');"><img src="/images/presetFood.png" class="press"/><span class="caption">Food and Drinks</span></div>
+			<div class="preset" onclick="insertText('chatUserInput', ';Entertainment: $');"><img src="/images/presetEntertainment.png" class="press"/><span class="caption">Entertainment</span></div>
+			<div class="preset" onclick="insertText('chatUserInput', ';Education: $');"><img src="/images/presetEducation.png" class="press"/><span class="caption">Education</span></div>
+			<div class="preset" onclick="insertText('chatUserInput', ';Transport: $');"><img src="/images/presetTransport.png" class="press"/><span class="caption">Transport</span></div>
+			<div class="preset" onclick="insertText('chatUserInput', ';Others: $');"><img src="/images/presetMisc.png" class="press"/><span class="caption">Others</span></div>
+			<div class="preset" id="back-expenditure"><img src="/images/presetBack.png" class="press"/><span class="caption">Back</span></div>
+		</div>
+
+		<div id="investments-preset" class="preset-set">
+			<div class="preset" id="suggest-new" onclick="insertText('chatUserInput', 'Suggest New Investment');"><img src="/images/presetAddinv.png" class="press"/><span class="caption">Suggest New</span></div>
+			<div class="preset" id="get-holdings" onclick="insertText('chatUserInput', 'Get Holdings');"><img src="/images/presetGetHoldings.png" class="press"/><span class="caption">Get Holdings</span></div>
+			<div class="preset" id="back-investment"><img src="/images/presetBack.png" class="press"/><span class="caption">Back</span></div>
+		</div>
+		
+	</div>
+	
+	<div id="toggle-preset"><img src="/images/chatPreset.png"></div>
+	<div id="chatUserInputDiv"><input type="text" name="user_msg" id="chatUserInput"></div>
+	<input type="image" src="/images/chatSubmit.png" id="chatSubBut">
+</form>
+
+</body>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<script>
+$(document).ready(function(){
+	$("#preset-buttons").hide(); <!-- to hide the preset buttons on load -->
+	$("#savings-preset").hide();
+	$("#expenditure-preset").hide();
+	$("#investments-preset").hide();
+
+	$("#toggle-preset").click(function(){
+		$("#preset-buttons").toggle("fade");
+	});
+	$("#savings-sub").click(function(){
+		$("#all-preset").toggle("fade");
+		$("#savings-preset").toggle("fade");
+
+	});
+
+	 $("#get-savings").click(function(){
+		$("#user_msg").val("Get Savings");
+	});
+	 $("#add-savings").click(function(){
+		$("#user_msg").val("Save $");
+	});
+	 $("#suggest-new").click(function(){
+		$("#user_msg").val("Suggest Investments");
+	});
+	 $("#get-holdings").click(function(){
+		$("#user_msg").val("Get Current Holdings");
+	});
+
+	$("#expenditure-sub").click(function(){
+		$("#all-preset").toggle("fade");
+		$("#expenditure-preset").toggle("fade");
+	});	
+
+	$("#investment-sub").click(function(){
+		$("#all-preset").toggle("fade");
+		$("#investments-preset").toggle("fade");
+	});
+
+
+	$("#back-savings").click(function(){
+		$("#all-preset").toggle("fade");
+		$("#savings-preset").toggle("fade");
+	});
+	$("#back-expenditure").click(function(){
+		$("#all-preset").toggle("fade");
+		$("#expenditure-preset").toggle("fade");
+	});
+	$("#back-investment").click(function(){
+		$("#all-preset").toggle("fade");
+		$("#investments-preset").toggle("fade");
+	});
+
+	var _URL = window.URL || window.webkitURL; //dk what this is for just copy n paste
+
+	$('#chatSubBut').click(function(){
+		var user_msg = $("#chatUserInput").val();
+		                   // if newImage is empty
+		if ($("#upload-photo").val() != ''){
+			$("#msgArea").append("<div class = 'userMsg' id='image-send'></div>");
+		} else {
+			$("#msgArea").append('<div class="userMsg">'+user_msg + '</div>');
+		}
+
+
+		var file;
+		var image;
+		if ((file = $("#upload-photo")[0].files[0])) {
+			image = new Image();
+			image.onload = function () {
+				$("#image-send").append(this);
+				$(this).attr("id", "image");
+			}
+			image.src = _URL.createObjectURL(file);
+		}
+		var msgBox = document.getElementById("msgArea");
+		msgBox.scrollTop = msgBox.scrollHeight - msgBox.clientHeight;
+
+		// else append img tag instead
+		$.ajax({
+			url: '/submitchat',
+			type: 'POST',
+			data: new FormData($('#chatForm')[0]),
+			dataType: 'json',
+			// Tell jQuery not to process data or worry about content-type
+			// You *must* include these options!
+			cache: false,
+			contentType: false,
+			processData: false,
+			success: function(data,status){
+				//alert(data.bot_msg);
+				//alert("Data" + data +"status"+status);
+				$("#msgArea").append('<div class="botMsg">'+ data.bot_msg+ '</div>');
+				$("#chatUserInput").val('');
+				$("#upload-photo").val("");//  clear the input file for next submission
+				var msgBox = document.getElementById("msgArea");
+				msgBox.scrollTop = msgBox.scrollHeight - msgBox.clientHeight;
+			}
+		});
+		return false;
+	});
+
+});
+	
+function insertText(elemID, text){
+	document.getElementById(elemID).value += text;
+}
+
+//auto scroll on new message and initial load
+var msgBox = document.getElementById("msgArea");
+msgBox.scrollTop = msgBox.scrollHeight - msgBox.clientHeight;
+var add = setInterval(function() {
+    // allow 1px inaccuracy by adding 1
+    var isScrolledToBottom = msgBox.scrollHeight - msgBox.clientHeight <= msgBox.scrollTop + 1;
+    // scroll to bottom if isScrolledToBotto
+    if(isScrolledToBottom)
+		msgBox.scrollTop = msgBox.scrollHeight - msgBox.clientHeight;
+}, 1000);
+
+
+</script>
+
+{% endautoescape %}
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> 
+	<title>Home</title>
+    <link rel="stylesheet" href="/css/default.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<div id="header">
+	<h1><span>$</span>av<img src="/images/thumb.png">nUp</h1>
+</div>
+
+<div>
+<ul id="navbar">
+	<a class="active" href="/"><img src="http://www.iconsdb.com/icons/preview/white/home-5-xxl.png"></a>
+	<a href="/chatbot"><img src="http://www.iconsdb.com/icons/preview/white/speech-bubble-2-xxl.png"></a>
+</ul>
+</div>
+
+<div id="homePageSummary">
+	<a href="/goals" id="goals" class="summary">
+		<h3><span>></span></h3>
+		<div id="progressBarContainer">
+			<div id="progressBar"></div>
+		</div>
+		<br></br><h2>You are {{progressPercentage}}% there!</h2>
+	</a>
+
+	<a href="/savings" id="savings" class="summary">
+		<h3><span>></span></h3>
+		<div id="container"></div>
+		<br></br><h2>You have spent ${{todaySpending}} today!</h2>
+	</a>
+
+	<a href="/investments" id="investments" class="summary">
+		<h3><span>></span></h3>
+
+		<table id="investmentSummary">
+
+			<tr id="lengthyHeader">
+				<th class="investmentName">Name</th>
+				<th class="investmentQuantity">Quantity</th>
+				<th class="investmentPrice">Current Price</th>
+				<th class="investmentTotal">Total</th>
+			</tr>
+
+			<tr id="shorterHeader">
+				<th class="investmentName">Name</th>
+				<th class="investmentQuantity">Qty</th>
+				<th class="investmentPrice">Price</th>
+				<th class="investmentTotal">Total</th>
+			</tr>
+
+		</table>
+
+		<br></br><h2>You have earned ${{investmentEarnings}} from your investments!</h2>
+	</a>
+
+	<a href="/chatbot" class="additionalCrapAtTheBottom">
+		<h2 > + Find something to invest in! </h2>
+	</a>
+</div>
+
+</body>
+
+
+<script src="https://rawgit.com/kimmobrunfeldt/progressbar.js/1.0.0/dist/progressbar.js"></script>
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+<script>
+//----------------------PROGRESS METER----------------------
+var bar = new ProgressBar.Circle(container, {
+  color: '#fff',
+  strokeWidth: 5,
+  trailWidth: 2,
+  easing: 'easeInOut',
+  duration: 1400,
+  text: {
+    autoStyleContainer: false
+  },	
+  from: { color: '#fff', width: 3 },
+  to: { color: '#fff', width: 5 },
+  
+  step: function(state, circle) {
+    circle.path.setAttribute('stroke', state.color);
+    circle.path.setAttribute('stroke-width', state.width);
+
+    var value = Math.round(circle.value() * 100);
+    if (value === 0) {
+      circle.setText('');
+    } else {
+      circle.setText(value+"%");
+    }
+
+  }
+});
+bar.text.style.fontFamily = 'Helvetica, sans-serif';
+bar.text.style.fontSize = '36px';
+
+bar.animate({{todaySpendingPercentage}}); //0 - 1
+
+//----------------------PROGRESS BAR----------------------
+var elem = document.getElementById("progressBar");   
+var width = 0;
+var id = setInterval(frame, 10);
+function frame() {
+	if (width >= {{progressPercentage}}) { //0 - 100
+	  clearInterval(id);
+	} else {
+	  width++; 
+	  elem.style.width = width + '%'; 
+	  elem.innerHTML = width * 1  + '%';
+	}
+}
+
+//add investments to table
+var investments = {{investmentsArray|safe}};
+var investmentsList='';
+for (var i = 0; i < investments.length; i++){
+	investmentsList += "<tr><td>"+investments[i][0]+"</td><td>"+investments[i][1]+"</td><td>"+investments[i][2]+ "</td><td>"+investments[i][3]+"</td></tr>";
+}
+document.getElementById("investmentSummary").innerHTML += investmentsList;
+</script>

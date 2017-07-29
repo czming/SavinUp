@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> 
+	<title>Stock Data</title>
+    <link rel="stylesheet" href="/css/default.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<div id="header">
+	<h1>
+		<a href="/investments" id="backButton"><</a>
+		<span>$</span>av<img src="/images/thumb.png">nUp
+	</h1>
+</div>
+
+<div>
+<ul id="navbar">
+	<a class="active" href="/"><img src="http://www.iconsdb.com/icons/preview/white/home-5-xxl.png"></a>
+	<a href="/chatbot"><img src="http://www.iconsdb.com/icons/preview/white/speech-bubble-2-xxl.png"></a>
+</ul>
+</div>
+
+<div id="investmentsList">
+	<ol id="stockDataTitle"><!--Stuff will be inserted here-->
+		<li>
+			<span class='stockName'>{{stockName}}<br /></span>
+			<span class='stockSymbol'>({{stockSymbol}})</span>
+			<span class='stockPrice'>
+				{{stockPrice}}<br />
+				<span class='stockPriceChange'>{{stockPriceChange}}</span>
+			</span>
+		</li>
+		<div class="panel">
+			<div id="stockChart"></div>
+			<div id="stockTables"></div>
+		</div>
+	</ol>
+</div>
+<!---
+<div id="stockSearch">
+	<h2>Search for stocks:</h2	>
+	<form action="/submitStockSearch" method="post" enctype="multipart/form-data" id="formSearchBox">
+		<input type="text" name="user_msg" id="formUserInp">
+		<input type="submit" value="Submit" id="formSubBut">
+	</form>
+</div>
+-->
+<a class="additionalCrapAtTheBottom" href="/chatbot">
+	<h2> + Find something to invest in! </h2>
+</a>
+
+</body>
+
+<script src="/js/canvasjs.min.js"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<script>
+	
+loadGraph();
+loadTable();
+
+//change color of prices
+var stockPriceChanges = document.getElementsByClassName("stockPriceChange");
+var priceChange = "", indexOfMinus = 0;
+for (i = 0; i < stockPriceChanges.length; i++){
+	priceChange = stockPriceChanges[i].innerHTML;
+	if (priceChange.substr(0,1) === "-"){
+		stockPriceChanges[i].style.color = "#ff3239";
+	}else{
+		stockPriceChanges[i].style.color = "#099c39";
+		stockPriceChanges[i].innerHTML = "+"+stockPriceChanges[i].innerHTML;
+	}
+}
+
+function loadTable(){
+	var stockTableData = {{stockTableData|safe}};
+	
+	var tableHTML = "<table id='stockTable'><tr><td>Last price: </td><td>"+stockTableData[0]+"</td><td>Buy : </td><td>"+stockTableData[5]+"</td></tr><tr><td>Open: </td><td>"+stockTableData[1]+"</td><td>Sell : </td><td>"+stockTableData[6]+"</td></tr><tr><td>High: </td><td>"+stockTableData[2]+"</td><td>BVol : </td><td>"+stockTableData[7]+"</td></tr><tr><td>Low: </td><td>"+stockTableData[3]+"</td><td>SVol : </td><td>"+stockTableData[8]+"</td></tr><tr><td>Volume: </td><td>"+stockTableData[4]+"</td></tr></table>"
+
+	+"<table id='shortStockTable'><tr><td>Last price: </td><td>Buy : </td></tr><tr><td>"+stockTableData[0]+"</td><td>"+stockTableData[5]+"</td></tr><tr><td>Open: </td><td>Sell : </td></tr><tr><td>"+stockTableData[1]+"</td><td>"+stockTableData[6]+"</td></tr><tr><td>High: </td><td>BVol : </td></tr><tr><td>"+stockTableData[2]+"</td><td>"+stockTableData[7]+"</td></tr><tr><td>Low: </td><td>SVol : </td></tr><tr><td>"+stockTableData[3]+"</td><td>"+stockTableData[8]+"</td></tr><tr><td>Volume: </td></tr><tr><td>"+stockTableData[4]+"</td></tr></table>";
+	
+	document.getElementById("stockTables").innerHTML=tableHTML;
+}
+
+function loadGraph(){
+
+
+    stockGraphData = {{stockGraphData|safe}}
+
+
+    for (i = 0; i < stockGraphData.length; i++) { // iterating through all the recorded dates
+       // console.log(i);
+        stockGraphData[i]['x'] = new Date(stockGraphData[i]['x'])
+    }
+
+	var spendingLineChart = new CanvasJS.Chart("stockChart", {
+		animationEnabled: true,
+		axisX: {
+			gridColor: "Silver",
+			tickColor: "silver",
+			valueFormatString: "DD/MMM"
+		},
+		toolTip: {
+			shared: true
+		},
+		theme: "theme2",
+		axisY: {
+			gridColor: "Silver",
+			tickColor: "silver"
+		},
+		legend: {
+			verticalAlign: "center",
+			horizontalAlign: "right"
+		},
+		data: [{
+			type: "line",
+			showInLegend: true,
+			lineThickness: 2,
+			name: "Price",
+			markerType: "square",
+			color: "#F08080",
+			dataPoints: stockGraphData
+		},
+		],
+		legend: {
+			cursor: "pointer",
+			itemclick: function (e) {
+				if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+					e.dataSeries.visible = false;
+				}
+				else {
+					e.dataSeries.visible = true;
+				}
+				spendingLineChart.render();
+			}
+		}
+	});
+	spendingLineChart.render();
+}
+
+</script>

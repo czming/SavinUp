@@ -1,0 +1,21 @@
+cron:
+- description: Daily Dividend Cron Job
+  url: /dividendCronJob
+  schedule: every 24 hours
+  
+- description: Daily Price Targets Cron Job
+  url: /priceTargetsCronJob
+  schedule: every 24 hours
+
+- description: Review Scores
+  url: /reviewScoresCronJob
+  schedule: every 24 hours
+
+- description: Analyse Stocks
+  url: /analyseStocksCronJob
+  schedule: every 24 hours
+
+- description: Historical Price Cron Job
+  url: /historicalPriceCronJob
+  schedule: every 24 hours
+

@@ -1,0 +1,764 @@
+body {
+	margin: 0; 
+	padding: 0;
+	font-family: Helvetica, sans-serif;
+	font-size: 8px;
+	background-color: #ddd;
+	display: -webkit-box; /* OLD - iOS 6-, Safari 3.1-6 */
+    display: -moz-box; /* OLD - Firefox 19- (buggy but mostly works) */
+    display: -ms-flexbox; /* TWEENER - IE 10 */
+    display: -webkit-flex; /* NEW - Chrome */
+    display: flex; /* NEW, Spec - Opera 12.1, Firefox 20+ */
+    -ms-flex-direction: column;
+    -moz-flex-direction: column;
+    -webkit-flex-direction: column;
+    flex-direction: column;
+	height: 100vh;
+}
+
+/*****************HEADER*****************/
+h1 {
+	font-size: 30px; 
+	font-style: bold;
+	text-align: center; 
+	color: #000;
+	margin: 0px;
+}
+
+#backButton{
+	position: absolute;
+	left: 20px;
+}
+
+#header {
+	background-color: #fff;
+    color:aliceblue;
+	padding: 14px;
+}
+
+#header img{
+	height: 30px;
+	vertical-align: text-top;
+}
+
+#header span{
+	font-size: 32px;
+}
+
+/*****************TOP NAVIGATION BAR*****************/
+#navbar {
+	width: 100%;
+    text-align: center;
+    background-color: #4E6766;
+	margin: 0px; 
+	padding: 0px;
+    overflow: auto;
+}
+
+#navbar a {
+	width: 50%;
+    padding: 8px 0;
+    float: left;
+    transition: all 0.3s ease;
+}
+
+#navbar a img{height: 30px;}
+#navbar a:hover {
+	background-color: #555;
+}
+#navbar .active{
+	background-color: #1E152A !important;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*******************SUMMARY PAGE*******************/
+#summary a:hover, a:visited, a:link, a:active{
+    text-decoration: none;
+	color: #000;
+}
+
+h2 {
+	font: normal 20px Helvetica, sans-serif;
+	text-align: center; 
+	color:#fff;
+	margin: 0px;
+}
+
+h3 {
+	font: normal 30px Helvetica, sans-serif; 
+	color:#fff;
+	margin: 0px; padding: 0px;
+	position: absolute;
+	right: 5%;
+	top: 50%;
+	transform: translateY(-15px);
+}
+
+h3:after{
+	content: "»";
+	opacity: 0;
+	transition: 0.5s;
+	position: absolute; right: 5%;
+}
+
+.summary:hover h3:after{
+	opacity: 1;
+}
+.summary:hover span{
+	opacity: 0;
+}
+
+@media screen and (min-width:768px){
+	h3{right: 38.4px}
+}
+
+.summary{
+	text-align: center;
+	padding: 30px;
+	display: block;
+	position: relative;
+	transition: all 0.5s;
+}
+
+/*******************GOALS*******************/
+#goals{
+	background-color: #F3BB71;
+}
+
+#homePageSummary #goals:hover{
+	background-color: #f5c88c;
+}
+
+#progressBarContainer {
+	width: 80%;
+	background-color: #ddd;
+	margin: auto;
+	border-radius: 10px;
+}
+
+#progressBar {
+	width: 10%;	
+	height: 36px;
+	background-color: #DD8613;
+	text-align: center; 
+	color: white; 
+	font-size: 20px;
+	line-height: 36px;
+	border-top-left-radius: 10px;
+	border-bottom-left-radius: 10px;
+}
+
+/*******************SAVINGS*******************/
+#savings {
+	background-color: #5AB1BB;
+}
+
+#homePageSummary #savings:hover{
+	background-color: #79c0c8;
+}
+
+#container {
+	width: 150px; 
+	height: 150px;
+	position: relative;
+	margin: auto;
+}
+
+/*******************INVESTMENTS*******************/
+#investments{
+	background-color: #A5C882;
+}
+
+#homePageSummary #investments:hover{
+	background-color: #b6d29a;
+}
+
+#investments table{
+	width: 80%;
+	font: normal 14px Helvetica, sans-serif;
+	text-align: center; 
+	color: #fff;
+	margin: auto;
+	border-collapse: collapse;
+}
+
+#investments th{
+	font: bold;
+	height: 24px;
+}
+
+#investments tr{
+	font-size: 14px;
+	border: 1px solid #fff;
+	height: 24px;
+}
+
+#lengthyHeader{
+	display: table-row;
+}
+#shorterHeader{
+	display: none;
+}
+
+@media screen and (max-width: 420px){
+	
+	.investmentName{
+		width: 8vw;
+	}
+	.investmentQuantity{
+		width: 6vw;
+	}
+	.investmentPrice{
+		width: 6vw;
+	}
+	.investmentTotal{
+		width: 6vw;
+	}
+	#lengthyHeader{
+		display: none;
+	}
+	#shorterHeader{
+		display: table-row;
+	}
+	
+}
+
+/*******************BOTTOM BAR*******************/
+.additionalCrapAtTheBottom {
+	padding: 30px;
+	background-color: #ccc;
+	display: block;
+}
+
+.additionalCrapAtTheBottom:hover{
+	background-color:#d6d6d6;
+}
+
+.additionalCrapAtTheBottom h2{
+	font-weight: bold;
+	color: #666;
+}
+
+.additionalCrapAtTheBottom img {
+	height: 20px; vertical-align: middle;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*******************GOALS*******************/
+#chart_div {
+	width: 80%; 
+	height: 200px;
+	position: relative;
+	margin: auto;
+}
+
+#progressChart {
+	background-color: #F3D271;	
+	padding: 30px;
+}
+
+#praise{
+	display: none;
+}
+
+#encourage{
+	display: none;
+}
+
+#yourGoals{
+	background-color: #bbb;
+	display: table; width: 100%;
+}
+
+#imgDiv{
+	display: table-cell;
+	vertical-align: middle;
+	padding: 30px;
+	width: 30%;
+	position: relative;
+}
+
+#imgDiv img{
+	width:100%;
+}
+
+#yourGoalsDiv {
+	padding: 30px 30px 30px 0px;
+}
+
+@media screen and (min-width: 667px){
+	#imgDiv{width: 200px;}
+}
+
+@media screen and (max-width: 420px){
+	#imgDiv{
+		display: block;
+		margin: auto;
+		width: 50%;
+		padding: 0px; padding-top: 30px;
+	}
+	#yourGoalsDiv{padding: 30px;}
+	#yourGoalsDiv h4{text-align: center;}
+}
+
+h4 {
+	font: bold 20px Helvetica, sans-serif; 
+	color: #fff; 
+	margin: 0px;
+	padding-bottom: 20px;
+}
+
+h5 {
+	font: normal 18px Helvetica, sans-serif; color:#fff;
+	padding-right: 30px; margin: 0px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/****************** SAVINGS *************************/
+#totalSavings{
+	font: bold 50px Helvetica, sans-serif; 	
+}
+
+#savingStats{
+	background-color: #4272A6;
+	padding: 30px;
+}
+
+#tabContainer{
+	height: 510px;
+	overflow: hidden;
+}
+
+#tabs{
+	background-color: #aaa;
+	display: table; width: 100%;
+}
+
+#tabs a {
+	display: table-cell;
+	text-align: center;
+	padding: 10px 0px;
+}
+
+#tabs a img{
+	width: 30px;
+	-webkit-filter: invert(1);
+}
+
+.tabActive{background-color: #2A5E98 !important;}
+#tabs a:hover {background-color: #888}
+
+.tabContent{
+	/*-webkit-animation: fadeEffect 1s;
+    animation: fadeEffect 1s;*/
+	padding: 30px 0px;
+	background-color: #fff;
+}
+/*
+@-webkit-keyframes fadeEffect {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}
+
+@keyframes fadeEffect {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}
+*/
+.tabContentContents{
+	width: 80%;
+	margin: auto;
+	height: 400px;
+}
+
+#budgetAnalytics{
+	background-color: #3DAE7E;
+	padding: 30px;
+}
+
+#pieChart{
+	height: 200px; 
+	width: 70%;
+	margin: auto;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/****************** INVESTMENTS *************************/
+#investmentsList{
+	background-color: #82a5c8;
+	padding: 30px;
+}
+
+#investmentsList h2{
+	padding-bottom: 30px;
+}
+
+ol {
+	counter-reset:li; /* Initiate a counter */
+	margin: 0px;
+	padding-left:0; /* Remove the default left padding */
+	font-size: 20px;
+}
+ol > li {
+	position:relative; /* Create a positioning context */
+	margin:0 0 6px 2em; /* Give each list item a left margin to make room for the numbers */
+	transition: 0.4s;
+	padding: 10px 8px;
+	list-style:none; /* Disable the normal item numbering */
+	border-top: 2px solid #2D549A;
+	background:#fff;
+}
+ol > li:before {
+	content:counter(li); /* Use the counter as content */
+	counter-increment:li; /* Increment the counter by 1 */
+	/* Position and style the number */
+	position:absolute;
+	top:-2px;
+	left:-2em;
+	-moz-box-sizing:border-box;
+	-webkit-box-sizing:border-box;
+	box-sizing:border-box;
+	width:2em;
+	/* Some space between the number and the content in browsers that support
+	   generated content but not positioning it (Camino 2 is one example) */
+	margin-right:8px;
+	padding:10px;
+	border-top:2px solid #2D549A;
+	color:#fff;
+	background:#2D549A;
+	font-weight:bold;
+	font-family:"Helvetica Neue", Arial, sans-serif;
+	text-align:center;
+}
+li ol,
+li ul {margin-top:6px;}
+ol ol li:last-child {margin-bottom:0;}
+
+#investmentsList li.active, #investmentsList li:hover{
+	 background-color: #ddd;
+}
+
+.stockName{
+	display: table; width: 75%;
+}
+
+.stockPrice{
+	position: absolute;
+	right: 5%;
+	top: 50%;
+	transform: translateY(-20px);
+	text-align: right;
+}
+
+.stockSymbol{
+	font: bold 16px Helvetica, Arial, sans-serif;
+}
+
+.stockPriceChange{
+	font: bold 16px Helvetica, Arial, sans-serif;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/****************** STOCK DATA PAGE *************************/
+.panel {
+	padding: 20px;
+    background-color: white;
+    max-height: 800px;
+    overflow: hidden;
+    transition: 0.6s ease-in-out;
+	opactiy: 1;
+}
+
+#stockChart{
+	height: 300px;
+}
+
+#stockTable{
+	padding: 20px 0px;
+	width: 100%;
+	font-size: 14px;
+	margin: auto;
+}
+
+#shortStockTable{
+	padding: 20px 0px;
+	width: 100%;
+	font-size: 14px;
+	margin: auto;
+	display:none;
+}
+
+@media screen and (min-width: 768px){
+	#stockTable{width: 632px;}
+}
+
+@media screen and (max-width: 350px){
+	#shortStockTable{display: table}
+	#stockTable{display:none;}
+}
+
+#stockDataTitle li{
+	margin: 0px;
+	background-color: #2D549A;
+	padding: 10px 5%;
+	color: #FFFFFF;
+}
+
+#stockDataTitle li span{
+	color: #fff;
+}
+
+#stockDataTitle li:before{
+	display: none;
+}
+
+#stockDataTitle li:hover{
+	background-color: #2D549A;
+}
+
+
+
+
+
+
+
+
+
+
+
+#stockSearch{
+	background-color: #c882a5;
+	display: table; width: 100%;
+}
+
+#formSearchBox{
+	
+}
+
+#formUserInp{
+	width: 100%;
+	font: normal 14px Helvetica, sans-serif;
+	border-radius: 7px;
+}
+
+#formSubBut{
+	margin-left: 3px;
+	font: normal 14px Helvetica, sans-serif;
+	padding: 7px;
+	width: 20%;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/********************* CHATBOT FIXED HEADER *********************/
+#chatbotHeader {
+	position: fixed;
+	display: table; width: 100%;
+}
+
+/********************* CHATBOT MESSAGES *********************/
+#msgArea{
+	background-color: #ddd;
+	font: normal 14px Helvetica, sans-serif;
+	overflow: auto;
+	margin: 112px 0px 63.2px 0px;
+	padding-bottom: 10px;
+	-webkit-box-flex: 1; /* OLD - iOS 6-, Safari 3.1-6 */
+    -moz-box-flex: 1; /* OLD - Firefox 19- */
+    -webkit-flex: 1; /* Chrome */
+    -ms-flex: 1; /* IE 10 */
+    flex: 1; /* NEW, */
+}
+
+.userMsg{
+	background-color: #ded4bb;
+	border-radius: 14px;
+	margin: 3px 20px 3px 0px;
+	padding: 14px;
+	max-width: 50%;
+	float: right;
+	clear: both;
+}
+
+.botMsg{
+	background-color: #b7d9a2;
+	border-radius: 14px;
+	margin: 3px 0px 3px 20px;
+	padding: 14px;
+	max-width: 50%;
+	float: left;
+	clear: both;
+}
+
+.userMsg img{
+	max-width: 45vw;
+}
+
+/********************* CHATBOT FORM *********************/
+#chatForm{
+	background-color: #fff;
+	display: table;
+	width: 100%;
+	position: fixed;
+	bottom: 0%;
+}
+
+#chatUserInputDiv{
+	margin: 14px 50px;
+}
+
+#chatUserInput{
+	font: normal 14px Helvetica, sans-serif;
+	border-radius: 7px;
+	padding: 7px 0px;
+	width: 100%;
+	left: 0%;
+}
+
+#chatSubBut{
+	position: absolute;
+	right: 10px; bottom: 16.6px;
+	height: 30px;	
+}
+
+/********************* CHATBOT PRESETS *********************/
+#toggle-preset img{
+	height: 30px;
+	margin: 16.6px 10px;
+	float: left;
+}
+
+#preset-buttons{
+	position: absolute;
+	bottom: 63.2px;
+	background-color: #fff;
+	opacity: 0.9;
+	padding: 10px;
+	border-radius: 50px;
+	margin-bottom: 10px;
+}
+
+.preset-set{
+	display: block;	
+	text-align: center;
+	border-radius: 50px;
+}
+
+div.preset{ /*img div*/
+	/* To correctly align image, regardless of content height: */
+	vertical-align: top;
+	display: inline-block;
+	padding: 5px 5px;
+	width: 20vw;
+	max-width: 75px;
+	/* To horizontally center images and caption */
+	
+	/* The width of the container also implies margin around the images. */
+}
+
+img.press { /*img*/
+	width: 100%;
+	background-color: grey;
+	border-radius: 50%;
+}
+
+.caption {
+	/* Make the caption a block so it occupies its own line. */
+	display: block;
+	font: normal 12px Helvetica, sans-serif;
+	
+}
+

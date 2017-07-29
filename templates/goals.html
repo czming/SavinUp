@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> 
+	<title>Goals</title>
+    <link rel="stylesheet" href="/css/default.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">	
+</head>
+<body>
+
+<div id="header">
+	<h1>
+		<a href="/" id="backButton"><</a>
+		<span>$</span>av<img src="/images/thumb.png">nUp
+	</h1>
+</div>
+
+<div>
+<ul id="navbar">
+	<a class="active" href="/"><img src="http://www.iconsdb.com/icons/preview/white/home-5-xxl.png"></a>
+	<a href="/chatbot"><img src="http://www.iconsdb.com/icons/preview/white/speech-bubble-2-xxl.png"></a>
+</ul>
+</div>
+
+
+<div id="goals" class="summary">
+	<div id="progressBarContainer">
+		<div id="progressBar"></div>
+	</div>
+	<br></br>
+	<h2>You are {{progressPercentage}}% there!</h2>
+</div>
+
+<div id="progressChart">
+	<div id="chart_div"></div>
+	<br></br>
+	<h2>Your progress over the last year.<span id="praise"> Not bad! You are on track!</span><span id="encourage"> You are slightly off track, but you are on the way there! Keep trying harder!</span>
+	</h2>
+</div>
+
+<div id="yourGoals">
+	<div id="imgDiv">
+		<img src="https://nelioabtesting.com/wp-content/uploads/2014/07/goal-icon.png">
+	</div>
+	
+	
+	<div id="yourGoalsDiv">
+		<h4>Your goals</h4>
+		<ol id="goalsList"></ol>
+	</div>
+</div>
+
+<a class="additionalCrapAtTheBottom" href="/chatbot">
+	<h2> <img src="http://www.iconsdb.com/icons/preview/black/edit-6-xxl.png"> Edit your goals </h2>
+</a>
+
+</body>
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+<script>
+//----------------------PROGRESS BAR----------------------
+var elem = document.getElementById("progressBar");   
+var width = 0;
+var id = setInterval(frame, 10);
+function frame() {
+	if (width >= {{progressPercentage}}) { //0 - 100
+	  clearInterval(id);
+	} else {
+	  width++; 
+	  elem.style.width = width + '%'; 
+	  elem.innerHTML = width * 1  + '%';
+	}
+}
+
+//----------------------PROGRESS CHART----------------------
+progressArray = {{progressArray}};
+	
+google.charts.load('current', {packages: ['corechart', 'line']});
+google.charts.setOnLoadCallback(drawLineStyles);
+	
+function drawLineStyles() {
+	var data = new google.visualization.DataTable();
+	data.addColumn('number', 'X');
+	data.addColumn('number', 'Projected');
+	data.addColumn('number', 'Current');
+
+	data.addRows(
+	progressArray //[[time, projected, current],[time, projected, current]]
+	);
+	var options = {
+		hAxis: {title: 'Time'},
+		vAxis: {title: 'Savings'},
+		colors: ['#a52714', '#097138'],
+		series: {
+			0: {lineWidth: 1, lineDashStyle: [5, 5]},
+			1: {lineWidth: 2}
+		},
+		backgroundColor: "F3D271",
+	};
+
+	var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+	chart.draw(data, options);
+	
+	//projected graph text
+	var projected = progressArray[progressArray.length-1][1];
+	var current = progressArray[progressArray.length-1][2];
+	
+	if (Math.abs(projected - current) < projected*0.1){
+		document.getElementById("praise").style.display = "inline";
+	}else{
+		document.getElementById("encourage").style.display = "inline";
+	}
+}
+
+//add goals to list
+var goals = {{goalsArray|safe}}, i, goalsList="";
+for (i = 0; i < goals.length; i++){
+	goalsList += "<li>"+goals[i]+"</li>";
+}
+document.getElementById("goalsList").innerHTML = goalsList;
+
+</script>

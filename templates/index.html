@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+{% autoescape true %}
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script>
+            $(document).ready(function(){
+                $("#preset-buttons").hide(); <!-- to hide the preset buttons on load -->
+                $("#savings").hide();
+                $("#expenditure").hide();
+                $("#investments").hide();
+
+                $("#toggle-preset").click(function(){
+                    $("#preset-buttons").toggle("fade");
+                });
+                $("#savings-sub").click(function(){
+                    $("#all-preset").toggle("fade");
+                    $("#savings").toggle("fade");
+
+                });
+
+                 $("#get-savings").click(function(){
+                    $("#user_msg").val("Get Savings");
+                });
+                 $("#add-savings").click(function(){
+                    $("#user_msg").val("Save $");
+                });
+                 $("#suggest-new").click(function(){
+                    $("#user_msg").val("Suggest Investments");
+                });
+                 $("#get-holdings").click(function(){
+                    $("#user_msg").val("Get Current Holdings");
+                });
+
+                $("#expenditure-sub").click(function(){
+                    $("#all-preset").toggle("fade");
+                    $("#expenditure").toggle("fade");
+                });
+
+                $("#investment-sub").click(function(){
+                    $("#all-preset").toggle("fade");
+                    $("#investments").toggle("fade");
+                });
+
+
+                $("#back-savings").click(function(){
+                    $("#all-preset").toggle("fade");
+                    $("#savings").toggle("fade");
+                });
+                $("#back-expenditure").click(function(){
+                    $("#all-preset").toggle("fade");
+                    $("#expenditure").toggle("fade");
+                });
+                $("#back-investment").click(function(){
+                    $("#all-preset").toggle("fade");
+                    $("#investments").toggle("fade");
+                });
+
+                var _URL = window.URL || window.webkitURL; //dk what this is for just copy n paste
+                $('#subbut').click(function(){
+                    var user_msg = $("#user_msg").val();
+
+                    // if newImage is empty
+                    if ($("#upload-photo").val() != ''){
+                        $("#msg").append("<div id='image-send'>User image(from AJAX) </div>");
+                    } else {
+                        $("#msg").append('<p>User says(from AJAX)'+user_msg+'</p>');
+                    }
+
+                    // else append img tag instead
+
+
+                    var file;
+                    var image;
+                    if ((file = $("#upload-photo")[0].files[0])) {
+                        image = new Image();
+                        image.onload = function () {
+                            $("#image-send").append(this);
+                            $(this).attr("id", "image");
+                        }
+                        image.src = _URL.createObjectURL(file);
+                    }
+
+
+                    $.ajax({
+                        url: '/submitchat',
+                        type: 'POST',
+                        data: new FormData($('#form-data')[0]),
+                        dataType: 'json',
+                        // Tell jQuery not to process data or worry about content-type
+                        // You *must* include these options!
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        success: function(data,status){
+                            //alert(data.bot_msg);
+                            //alert("Data" + data +"status"+status);
+                            $("#msg").append('<p>Bot says(from AJAX)'+data.bot_msg+'</p>');
+                            $("#user_msg").val('');
+                            $("#upload-photo").val("");//  clear the input file for next submission
+
+                        }
+                    });
+                    return false;
+                });
+
+
+            });
+        </script>
+    <style>
+        div.preset{
+            /* To correctly align image, regardless of content height: */
+            vertical-align: top;
+            display: inline-block;
+            /* To horizontally center images and caption */
+            text-align: center;
+            /* The width of the container also implies margin around the images. */
+            width: 120px;
+        }
+        img.msg {
+            max-width: 480px;
+        }
+        img.press {
+            width: 100px;
+            height: 100px;
+            background-color: grey;
+            border-radius: 50%;
+        }
+
+        .preset-container{
+            width: 100%;
+        }
+        .caption {
+            /* Make the caption a block so it occupies its own line. */
+            display: block;
+        }
+    </style>
+
+</head>
+
+    <script type="text/javascript">
+      function insertText(elemID, text)
+      {
+        document.getElementById(elemID).value += text;
+
+      }
+    </script>
+    <img src=""/>
+    <span class="caption">Text below the image</span>
+<body>
+    <h1>Hello this is the SaveUp Appplication!</h1>
+    <p>Your spendings: {{spendings}}<p></p>
+    <div id="msg">
+    {% for msg in chat_history %}
+        {% if msg.from_user %}
+            {% if msg.isImage %}
+                <p>User: <img src="/image?image={{msg.content}}" class="msg"></p>
+            {% else %}
+                <p>User: {{msg.content}}</p>
+            {% endif %}
+        {% else %}
+            <p>Bot: {{msg.content|safe}}</p>
+        {% endif %}
+    {% endfor %}
+    </div>
+    <form action="/submitchat" method="post" enctype="multipart/form-data" id="form-data">
+        <div id="preset-buttons" class="preset-container">
+            <div id="all-preset">
+                <div class="preset" id="savings-sub"><img src="" class="press"/><span class="caption">Savings</span></div>
+                <div class="preset" id="expenditure-sub"><img src="" class="press"/><span class="caption">Expenditure</span></div>
+                <div class="preset" id="investment-sub"><img src="" class="press"/><span class="caption">Investment</span></div>
+                <label for="upload-photo" ><img src="" class="press"/></label>
+                <div class="preset"><input type="file" name="newImage" capture="camera" id="upload-photo" style="display:none;"></div>
+                <div class="preset"><img src="" class="press"/><span class="caption">Back</span></div>
+            </div>
+            <div id="savings">
+                <div class="preset" id="get-savings"><img src="" class="press"/><span class="caption">Get Savings</span></div>
+                <div class="preset" id="add-savings"><img src="" class="press"/><span class="caption">Add Savings</span></div>
+                <div class="preset" id="back-savings"><img src="" class="press"/><span class="caption">Back</span></div>
+            </div>
+            <div id="expenditure">
+                <div class="preset" onclick="insertText('user_msg', ';Food: $');"><img src="" class="press"/><span class="caption">Food</span></div>
+                <div class="preset" onclick="insertText('user_msg', ';Entertainment: $');"><img src="" class="press"/><span class="caption">Entertainment</span></div>
+                <div class="preset" onclick="insertText('user_msg', ';Education: $');"><img src="" class="press"/><span class="caption">Education</span></div>
+                <div class="preset" onclick="insertText('user_msg', ';Transport: $');"><img src="" class="press"/><span class="caption">Transport</span></div>
+                <div class="preset" onclick="insertText('user_msg', ';Others: $');"><img src="" class="press"/><span class="caption">Others</span></div>
+                <div class="preset" id="back-expenditure"><img src="" class="press"/><span class="caption">Back</span></div>
+            </div>
+
+            <div id="investments">
+                <div class="preset" id="suggest-new"><img src="" class="press"/><span class="caption">Suggest New</span></div>
+                <div class="preset" id="get-holdings"><img src="" class="press"/><span class="caption">Get Holdings</span></div>
+                <div class="preset" id="back-investment"><img src="" class="press"/><span class="caption">Back</span></div>
+            </div>
+        </div>
+        Enter your msg:<br>
+        <input type="text" name="user_msg" id="user_msg"><div id="toggle-preset">+++</div>
+        <input type="submit" value="Submit" id="subbut">
+    </form>
+
+
+</body>
+</html>
+
+{% endautoescape %}

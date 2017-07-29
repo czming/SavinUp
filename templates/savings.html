@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> 
+	<title>Savings</title>
+    <link rel="stylesheet" href="/css/default.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">-->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script>
+		spendingData = {{spendingData|safe}}
+	</script>
+</head>
+<body>
+
+
+<div id="header">
+	<h1>
+		<a href="/" id="backButton"><</a>
+		<span>$</span>av<img src="/images/thumb.png">nUp
+	</h1>
+</div>
+
+<div>
+	<ul id="navbar">
+		<a class="active" href="/"><img src="http://www.iconsdb.com/icons/preview/white/home-5-xxl.png"></a>
+		<a href="/chatbot"><img src="http://www.iconsdb.com/icons/preview/white/speech-bubble-2-xxl.png"></a>
+	</ul>
+</div>
+
+<div id="savings" class="summary">
+		<div id="container"></div>
+	<br></br><h2>You have spent ${{todaySpending}} today!</h2>
+</div>
+
+
+<div id="savingStats">
+	<h2>You have saved</h2>
+	<h2 id=totalSavings>${{totalSavings}}</h2>
+	<h2>since you started!</h2><br></br><br></br>
+	<h2>Learn more about your monthly spendings!</h2>	
+</div>
+
+<div>
+<div id="tabContainer">
+	<div id="tabs">
+		<a href="javascript:void(0)" onclick="openTab(event, 'Overview');" class="tabLink" id="Overview">
+			<img src="http://icons.iconarchive.com/icons/icons8/windows-8/256/Editing-Overview-Pages-1-icon.png">
+		</a>
+		
+		<a href="javascript:void(0)" onclick="openTab(event, 'Food');" class="tabLink">
+			<img src="http://icons.iconarchive.com/icons/icons8/windows-8/512/Ecommerce-Food-icon.png">
+		</a>
+		
+		<a href="javascript:void(0)" onclick="openTab(event, 'Entertainment');" class="tabLink">
+			<img src="https://cdn1.iconfinder.com/data/icons/amusement-park-solid-2/48/51-512.png">
+		</a>
+			
+		<a href="javascript:void(0)" onclick="openTab(event, 'Education');" class="tabLink">
+			<img src="https://www.shareicon.net/download/2015/09/20/643896_education_512x512.png">
+		</a>
+			
+		<a href="javascript:void(0)" onclick="openTab(event, 'Transport');" class="tabLink">
+			<img src="https://cdn4.iconfinder.com/data/icons/dot/256/bus.png">
+		</a>
+		
+		<a href="javascript:void(0)" onclick="openTab(event, 'Misc');" class="tabLink">
+			<img src="https://cdn2.iconfinder.com/data/icons/budicon-misc/16/13-misc_-_puzzle_piece-512.png">
+		</a>
+	</div>
+
+<!--	<div id="Overview" class="tabContent">
+		<div id="stackedBarChart" class="tabContentContents"></div>
+	</div>-->
+
+	<div id="compare" class="tabContent">
+		<div id="foodLineGraph" class="tabContentContents"></div>
+	</div>
+</div>
+</div>
+
+<div id="budgetAnalytics">
+	<div id="pieChart"></div>
+	<h2>Your budget!</h2>
+</div>
+
+<p id="test"></p>
+
+</body>
+
+
+<script src="https://rawgit.com/kimmobrunfeldt/progressbar.js/1.0.0/dist/progressbar.js"></script>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script src="/js/canvasjs.min.js"></script>
+
+<script>
+
+//-----------------BUDGET PIE CHART-----------------
+google.charts.load('current', {'packages':['corechart']});
+google.charts.setOnLoadCallback(drawChart);
+
+function drawChart() {
+	var dataBudget = google.visualization.arrayToDataTable([
+	  ['Spending', 'Amount'],
+	  ['Expenses', {{budgetExpenses}}],
+	  ['Savings', {{budgetSavings}}],
+	]);
+
+	var optionsBudget = {
+		backgroundColor: "3DAE7E",
+		colors: ['#077345', '#009857'],
+		is3D: true,
+	};
+
+	var chart = new google.visualization.PieChart(document.getElementById('pieChart'));
+
+	chart.draw(dataBudget, optionsBudget);
+}
+
+//----------------------PROGRESS METER----------------------
+var bar = new ProgressBar.Circle(container, {
+  color: '#fff',
+  strokeWidth: 5, //control stroke
+  trailWidth: 2, //control stroke
+  easing: 'easeInOut',
+  duration: 1400,
+  text: {
+    autoStyleContainer: false
+  },	
+  from: { color: '#fff', width: 3 }, //control stroke
+  to: { color: '#fff', width: 5 }, //control stroke
+  
+  step: function(state, circle) {
+    circle.path.setAttribute('stroke', state.color);
+    circle.path.setAttribute('stroke-width', state.width);
+
+    var value = Math.round(circle.value() * 100); //edit number here to suggested spending
+    if (value === 0) {
+      circle.setText('');
+    } else {
+      circle.setText(value+"%");
+    }
+
+  }
+});
+bar.text.style.fontFamily = 'Helvetica, sans-serif';
+bar.text.style.fontSize = '36px';
+
+bar.animate({{todaySpendingPercentage|safe}});  // Number from 0.0 to 1.0
+
+//-------------------------TABS-------------------------
+document.getElementById("compare").style.display = "block";
+var tablinks = document.getElementsByClassName("tabLink");
+tablinks[0].className += " tabActive";
+
+for (j=0;j<spendingData.length;j++){ // iterating through all the recorded categories (yourAvg + avg)
+
+    for (i = 0; i < spendingData[1].length; i++) { // iterating through all the recorded dates
+        console.log(i);
+        spendingData[j][i]['x'] = new Date(spendingData[j][i]['x'])
+    }
+}
+
+function openTab(evt, tabName) {
+	var i, x, tablinks, pageToLoad;
+	x = document.getElementsByClassName("tabContent");
+	for (i = 0; i < x.length; i++) {
+		x[i].style.display = "none";
+	}
+	tablinks = document.getElementsByClassName("tabLink");
+	for (i = 0; i < tablinks.length; i++) {
+		tablinks[i].className = tablinks[i].className.replace(" tabActive", "");
+	}
+	if (tabName === "Overview" || tabName === 'Food' || tabName === 'Entertainment' || tabName === 'Education' || tabName === 'Transport' || tabName === "Misc")
+		pageToLoad = "compare";
+	else
+		pageToLoad = tabName;
+	document.getElementById(pageToLoad).style.display = "block";
+	evt.currentTarget.className += " tabActive";
+	loadGraph(tabName);
+}
+
+
+//-----------------------LINE GRAPHS-----------------------
+function loadGraph(tabName){
+	var yourArr , avgArr = [];
+	if (tabName == "Overview"){
+	    yourArr = spendingData[10];
+	    avgArr = spendingData[11];}
+	else if (tabName == "Food"){
+		yourArr = spendingData[0];
+		avgArr = spendingData[1];
+	}else if (tabName == "Entertainment"){
+		yourArr = spendingData[2];
+		avgArr = spendingData[3];
+	}else if (tabName == "Education"){
+		yourArr = spendingData[4];
+		avgArr = spendingData[5];
+	}else if (tabName == "Transport"){
+		yourArr = spendingData[6];
+		avgArr = spendingData[7];
+	}else if (tabName == "Misc"){
+		yourArr = spendingData[8];
+		avgArr = spendingData[9];
+	}
+	
+	var spendingLineChart = new CanvasJS.Chart("foodLineGraph", {
+		title: {
+			text: "Spending on "+tabName,
+			fontSize: 30
+		},		
+		animationEnabled: true,
+		axisX: {
+			gridColor: "Silver",
+			tickColor: "silver",
+			valueFormatString: "DD/MMM"
+		},
+		toolTip: {
+			shared: true
+		},
+		theme: "theme2",
+		axisY: {
+			gridColor: "Silver",
+			tickColor: "silver"
+		},
+		legend: {
+			verticalAlign: "center",
+			horizontalAlign: "right"
+		},
+		data: [
+		{
+			type: "line",
+			showInLegend: true,
+			lineThickness: 2,
+			name: "Your Spending",
+			markerType: "square",
+			color: "#F08080",
+			dataPoints: yourArr
+		},
+		{
+			type: "line",
+			showInLegend: true,
+			name: "Average Spending",
+			color: "#20B2AA",
+			lineThickness: 2,
+			dataPoints: avgArr
+		}
+		],
+		legend: {
+			cursor: "pointer",
+			itemclick: function (e) {
+				if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+					e.dataSeries.visible = false;
+				}
+				else {
+					e.dataSeries.visible = true;
+				}
+				spendingLineChart.render();
+			}
+		}
+	});
+	spendingLineChart.render()
+}
+
+//--------------------STACKED BAR CHART--------------------
+/*window.onload = function (){
+	var overviewChart = new CanvasJS.Chart("stackedBarChart", {
+		title: {
+			text: "Your monthly spendings"
+		},
+		animationEnabled: true,
+		axisX: {
+			interval: 0.01,
+			labelFontSize: 14,
+			lineThickness: 0
+		},
+		axisY2: {
+			valueFormatString: "$0.00",
+			lineThickness: 0
+		},
+		toolTip: {
+			shared: true
+		},
+		legend: {
+			verticalAlign: "top",
+			horizontalAlign: "center"
+		},
+
+		data: [{
+			type: "stackedBar",
+			showInLegend: true,
+			name: "Food",
+			axisYType: "secondary",
+			color: "#229C68",
+			dataPoints: {{overviewFood}},
+		},
+		{
+			type: "stackedBar",
+			showInLegend: true,
+			name: "Entertainment",
+			axisYType: "secondary",
+			color: "#3DAE7E",
+			dataPoints: {{overviewEntertainment}},
+		},
+		{
+			type: "stackedBar",
+			showInLegend: true,
+			name: "Education",
+			axisYType: "secondary",
+			color: "#8BE0BB",
+			dataPoints: {{overviewEducation}},
+		},
+		{
+			type: "stackedBar",
+			showInLegend: true,
+			name: "Transport",
+			axisYType: "secondary",
+			color: "#C0F3DD",
+			indexLabel: "$#total",
+			indexLabelPlacement: "outside",
+			dataPoints: {{overviewTransport}},
+		},
+		{
+			type: "stackedBar",
+			showInLegend: true,
+			name: "Transport",
+			axisYType: "secondary",
+			color: "#C0F3DD",
+			indexLabel: "$#total",
+			indexLabelPlacement: "outside",
+			dataPoints: {{overviewMisc}},
+		}
+		]
+	});
+	overviewChart.render();
+}*/
+document.getElementById('Overview').click();
+
+</script>
